@@ -8,3 +8,7 @@ this are the requirements:
 kivy
 opencv-python
 pyzbar
+
+little layout update label is now in the middle:
+
+![alt text](kivy_QR_Code_Scanner_App_2.png)
