@@ -9,8 +9,11 @@ from kivy.clock import Clock
 from kivy.graphics.texture import Texture
 from pyzbar import pyzbar
 import cv2
+import kivy
 
 from kivy.graphics import Color, Rectangle
+
+# from kivy.graphics.vertex_instructions import Rectangle
 
 
 class ColoredLabel(Label):
@@ -18,13 +21,15 @@ class ColoredLabel(Label):
         super().__init__(**kwargs)
         with self.canvas.before:
             # Set the background color (RGBA)
-            Color(0.5, 0.5, 0.5, 1)  # Grey color
-            self.rect = Rectangle(size=self.size, pos=self.pos)
+            Color(0.5, 0.5, 0.5, 0.6)  # Grey color
+            self.rect: Rectangle = Rectangle(size=self.size, pos=self.pos)
 
         # Bind the size and position to update the rectangle
         self.bind(size=self._update_rect, pos=self._update_rect)
+        # self.rect.bind(size=self._update_rect, pos=self._update_rect)
 
-    def _update_rect(self, *args):
+    def _update_rect(self, instance: Label, *args):
+        # print(instance.text)
         self.rect.pos = self.pos
         self.rect.size = self.size
 
@@ -44,12 +49,12 @@ class MainScreen(Screen):
         self.output_lbl: ColoredLabel = ColoredLabel(
             text=self.output_text,
             size_hint=(1, 0.2),
-            font_size="45dp",
+            font_size="30dp",
             halign="center",  # Center horizontally
             valign="middle",  # Center vertically
         )
-        self.output_lbl.text_size = (None, 200)
-        self.output_lbl.pos_hint == {"center_x": 0.5, "center_y": 0.5}
+        self.output_lbl.text_size = (None, 50)
+        self.output_lbl.pos_hint = {"center_x": 0.5, "center_y": 0.5}
 
         # Set text size to label size
         # create Toggle Button for pause and play of video stream
@@ -64,11 +69,13 @@ class MainScreen(Screen):
         self.but = Button(
             text="Stop", size_hint_y=None, height="48dp", on_press=self.stop_stream
         )
-        self.box.add_widget(self.output_lbl)
+        # self.box.add_widget(self.output_lbl)
         self.box.add_widget(self.img)
         self.box.add_widget(self.tog_btn)
         self.box.add_widget(self.but)
         self.add_widget(self.box)
+
+        self.add_widget(self.output_lbl)
         Clock.schedule_interval(self.update, 1.0 / 30)  # update for 30fps
 
     # update frame of OpenCV camera
